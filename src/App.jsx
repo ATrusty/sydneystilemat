@@ -1,6 +1,8 @@
 import React, { useMemo, useState } from "react";
 import { RotateCcw, PaintBucket, Eraser, Download, Grid2X2, Palette } from "lucide-react";
 
+const CANVAS_BACKGROUND = "#222321";
+
 const PALETTE = [
   "#171717", "#ffffff", "#ef4444", "#f97316", "#facc15",
   "#22c55e", "#14b8a6", "#3b82f6", "#8b5cf6", "#ec4899",
@@ -16,39 +18,46 @@ function makeCells(rows, cols) {
 
 function hexPoints(cx, cy, radius) {
   return Array.from({ length: 6 }, (_, i) => {
-    const angle = (Math.PI / 180) * (60 * i - 90);
+    const angle = (Math.PI / 3) * i;
     return `${cx + radius * Math.cos(angle)},${cy + radius * Math.sin(angle)}`;
   }).join(" ");
 }
 
 export default function App() {
-  const [rows, setRows] = useState(15);
-  const [cols, setCols] = useState(27);
-  const [cells, setCells] = useState(() => makeCells(15, 27));
+  const [rows, setRows] = useState(22);
+  const [cols, setCols] = useState(39);
+  const [cells, setCells] = useState(() => makeCells(22, 39));
   const [color, setColor] = useState("#171717");
   const [history, setHistory] = useState([]);
   const [tool, setTool] = useState("paint");
   const [showGrid, setShowGrid] = useState(true);
 
   const radius = 14;
-  const stepX = Math.sqrt(3) * radius;
-  const stepY = 1.5 * radius;
+  const stepX = 1.5 * radius;
+  const stepY = Math.sqrt(3) * radius;
   const padding = radius + 5;
 
   const hexes = useMemo(() => {
     const items = [];
     for (let row = 0; row < rows; row++) {
       for (let col = 0; col < cols; col++) {
-        const cx = padding + col * stepX + (row % 2 ? stepX / 2 : 0);
-        const cy = padding + row * stepY;
+        if (row === rows - 1 && col % 2 === 0) continue;
+        const cx = padding + col * stepX;
+        const cy = padding + row * stepY + (col % 2 === 0 ? stepY / 2 : 0);
         items.push({ id: row * cols + col, cx, cy });
       }
     }
     return items;
   }, [rows, cols, padding, stepX, stepY]);
 
-  const width = padding * 2 + (cols - 1) * stepX + stepX / 2;
-  const height = padding * 2 + (rows - 1) * stepY + radius;
+  const width = padding * 2 + (cols - 1) * stepX;
+  const hexVerticalRadius = Math.sqrt(3) * radius / 2;
+  const height =
+    padding +
+    (rows - 1) * stepY +
+    stepY / 2 +
+    hexVerticalRadius +
+    (padding - radius);
 
   function applyToCell(id) {
     setCells((current) => {
@@ -105,7 +114,7 @@ export default function App() {
       canvas.height = Math.ceil(height * 2);
       const ctx = canvas.getContext("2d");
       ctx.scale(2, 2);
-      ctx.fillStyle = "#ffffff";
+      ctx.fillStyle = CANVAS_BACKGROUND;
       ctx.fillRect(0, 0, width, height);
       ctx.drawImage(img, 0, 0);
       URL.revokeObjectURL(url);
@@ -184,7 +193,7 @@ export default function App() {
           <div className="canvas-wrap">
             <div className="canvas-frame">
               <svg id="artboard-svg" className="artboard" viewBox={`0 0 ${width} ${height}`} role="img" aria-label="Clickable hexagon pixel art canvas" style={{ cursor: tool === "erase" ? "cell" : "crosshair" }}>
-                <rect width={width} height={height} fill="#ffffff" />
+                <rect width={width} height={height} fill={CANVAS_BACKGROUND} />
                 {hexes.map((hex) => {
                   const cell = cells[hex.id];
                   return (
