@@ -92,7 +92,11 @@ kbd { font: 10px 'DM Mono', monospace; color: #9b9d93; background: #f4f4f0; bord
 .hint-key { color: #73766c; font: 9px 'DM Mono', monospace; border: 1px solid #e6e6df; padding: 3px 5px; border-radius: 4px; margin-right: 5px; }
 .page-footer { display: flex; justify-content: space-between; color: #9a9b92; font-size: 9px; padding-top: 20px; letter-spacing: .02em; }
 .page-footer span:first-child { letter-spacing: .1em; }
-@media (min-width: 1200px) { .canvas-wrap { min-height: 520px; } .artboard { max-height: 600px; width: auto; max-width: 100%; } }
+@media (min-width: 1200px) {
+  .canvas-wrap { min-height: 520px; }
+  .canvas-frame { width: min(100%, 1000px); }
+  .artboard { width: 100%; height: auto; min-width: 0; }
+}
 @media (max-width: 850px) {
   .app-shell { padding: 0 18px 18px; }
   .workspace { grid-template-columns: 1fr; }
