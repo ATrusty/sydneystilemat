@@ -165,10 +165,10 @@ export default function App() {
           <div className="section-divider" />
           <div className="panel-heading"><Grid2X2 size={16} /><span>CANVAS SETTINGS</span></div>
           <div className="range-row"><label htmlFor="rows">Rows</label><output>{rows}</output></div>
-          <input id="rows" className="range" type="range" min="5" max="24" value={rows} onChange={(e) => resizeGrid(Number(e.target.value), cols)} />
+          <input id="rows" className="range" type="range" min="5" max="30" value={rows} onChange={(e) => resizeGrid(Number(e.target.value), cols)} />
           <div className="range-row"><label htmlFor="cols">Columns</label><output>{cols}</output></div>
-          <input id="cols" className="range" type="range" min="8" max="36" value={cols} onChange={(e) => resizeGrid(rows, Number(e.target.value))} />
-          <label className="toggle-row"><span>Show outlines</span><input type="checkbox" checked={showGrid} onChange={(e) => setShowGrid(e.target.checked)} /><span className="toggle" /></label>
+          <input id="cols" className="range" type="range" min="8" max="40" value={cols} onChange={(e) => resizeGrid(rows, Number(e.target.value))} />
+          <label className="toggle-row"><span>Show outlines</span><input type="chWeckbox" checked={showGrid} onChange={(e) => setShowGrid(e.target.checked)} /><span className="toggle" /></label>
           <div className="section-divider" />
           <button className="reset-button" onClick={reset}><RotateCcw size={15} /> Clear canvas</button>
         </aside>
